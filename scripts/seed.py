@@ -12,7 +12,7 @@ def seed_regions(cur):
         """
         INSERT INTO region (region_name, base_population)
         VALUES (%s, %s)
-        ON CONFLICT DO NOTHING;
+        ON CONFLICT (region_name) DO NOTHING;
         """,
         regions
     )
@@ -28,24 +28,37 @@ def seed_products(cur):
         """
         INSERT INTO product (product_name, base_demand_factor, base_multiplier)
         VALUES (%s, %s, %s)
-        ON CONFLICT DO NOTHING;
+        ON CONFLICT (product_name) DO NOTHING;
         """,
         products
     )
 
 
 def main():
-    conn = get_connection()
-    cur = conn.cursor()
+    conn = None
+    cur = None
 
-    seed_regions(cur)
-    seed_products(cur)
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
 
-    conn.commit()
-    cur.close()
-    conn.close()
+        seed_regions(cur)
+        seed_products(cur)
 
-    print("✅ Base data seeded successfully.")
+        conn.commit()
+        print("✅ Base data seeded successfully.")
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print("❌ Error while seeding base data:")
+        print(e)
+
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
 
 
 if __name__ == "__main__":

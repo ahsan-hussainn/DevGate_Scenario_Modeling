@@ -67,32 +67,43 @@ def run_calculations(cur, scenario_id):
 
 
 def main():
-    conn = get_connection()
-    cur = conn.cursor()
+    conn = None
+    cur = None
 
-    # ---- Scenario metadata ----
-    scenario_name = "Population +10%, Demand -5%"
-    description = "What-if analysis: increased population, reduced demand"
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
 
-    scenario_id = create_scenario(cur, scenario_name, description)
+        # ---- Scenario metadata ----
+        scenario_name = "Population +10%, Demand -5%"
+        description = "What-if analysis: increased population, reduced demand"
 
-    # ---- Scenario parameters (per product) ----
-    scenario_params = [
-        # product_id, population_override, demand_factor_override, multiplier_override
-        (1, None, 0.0475, None),  # Product A
-        (2, None, 0.0285, None),  # Product B
-    ]
+        scenario_id = create_scenario(cur, scenario_name, description)
 
-    insert_scenario_parameters(cur, scenario_id, scenario_params)
+        # ---- Scenario parameters (per product) ----
+        scenario_params = [
+            # product_id, population_override, demand_factor_override, multiplier_override
+            (1, None, 0.0475, None),  # Product A
+            (2, None, 0.0285, None),  # Product B
+        ]
 
-    # ---- Run calculations ----
-    run_calculations(cur, scenario_id)
+        insert_scenario_parameters(cur, scenario_id, scenario_params)
+        run_calculations(cur, scenario_id)
 
-    conn.commit()
-    cur.close()
-    conn.close()
+        conn.commit()
+        print(f"✅ Scenario {scenario_id} executed successfully.")
 
-    print(f"✅ Scenario {scenario_id} executed successfully.")
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print("❌ Error while executing scenario:")
+        print(e)
+
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
 
 
 if __name__ == "__main__":
