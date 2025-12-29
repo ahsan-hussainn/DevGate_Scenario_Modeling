@@ -1,4 +1,4 @@
-# DevGate – Scenario Modeling (Python + Supabase)
+# DP – Scenario Modeling (Python + Supabase)
 
 This repository demonstrates a **simple, production-oriented scenario modeling solution** using open-source technologies.  
 The objective is to show how **predictive scenarios can be evaluated by changing assumptions (inputs) without reloading base data**, which is a common requirement in real-world forecasting and planning systems.
@@ -12,7 +12,7 @@ The objective is to show how **predictive scenarios can be evaluated by changing
 
 ## Repository Structure
 ```text
-DevGate_Scenario_Modeling/
+DP_Scenario_Modeling/
 ├── ddl/
 │   └── schema.sql          # Database schema (tables, PKs, FKs)
 │
