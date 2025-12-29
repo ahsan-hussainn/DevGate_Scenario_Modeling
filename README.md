@@ -129,3 +129,8 @@ This append-only design supports:
 **Scenario Results**
 <img width="1530" height="852" alt="scenario_results" src="https://github.com/user-attachments/assets/319ea2fd-2026-45f5-8db6-ddba01770b2e" />
 
+## Configuration & Error Handling
+- Database credentials are managed using environment variables via `python-dotenv`
+- A `.env` file is used locally and excluded from version control
+- Scripts include basic transaction handling (`commit / rollback`) to prevent partial writes
+- Base data tables enforce uniqueness constraints to ensure idempotent seeding
